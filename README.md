@@ -9,6 +9,7 @@
 <h2>Author</h2>
 <ul>
   <li><b>Name:</b> Samarjeet Singh</li>
+  <li><b>Name:</b> Vasu Jindal</li>
 </ul>
 
 <h2>Project Overview</h2>
