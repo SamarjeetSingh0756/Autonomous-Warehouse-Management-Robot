@@ -1,0 +1,182 @@
+html code:
+<!DOCTYPE html>
+<html>
+<head>
+<title>Robot Control Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+font-family: Arial, sans-serif;
+max-width: 1200px;
+margin: 0 auto;
+padding: 20px;
+}
+.control-panel {
+display: flex;
+flex-wrap: wrap;
+gap: 20px;
+}
+.section {
+flex: 1;
+min-width: 300px;
+background-color: #f5f5f5;
+padding: 15px;
+border-radius: 8px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.button-group {
+display: flex;
+gap: 10px;
+margin: 10px 0;
+}
+button {
+padding: 10px 15px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+font-weight: bold;
+}
+.primary {
+background-color: #4CAF50;
+color: white;
+}
+.secondary {
+background-color: #2196F3;
+color: white;
+}
+.
+danger {
+background-color: #f44336;
+color: white;
+}
+.warning {
+background-color: #ff9800;
+color: white;
+}
+.neutral {
+background-color: #9e9e9e;
+color: white;
+}
+h1, h2 {
+color: #333;
+}
+.active {
+border: 3px solid #4CAF50;
+}
+.camera-feed {
+width: 100%;
+max-height: 360px;
+object-fit: contain;
+background-color: #000;
+border-radius: 4px;
+}
+.status {
+margin-top: 10px;
+font-size: 14px;
+color: #666;
+}
+.controls {
+display: grid;
+grid-template-columns: 1fr 1fr 1fr;
+gap: 10px;
+margin-top: 15px;
+}
+.controls button {
+padding: 15px;
+font-size: 16px;
+}
+.center-col {
+grid-column: 2;
+}
+</style>
+</head>
+<body>
+<h1>Robot Control Panel</h1>
+<div class="control-panel">
+<div class="section">
+<h2>Camera Feed</h2>
+<img src="/video_feed" class="camera-feed" alt="Camera Feed">
+<div class="status" id="camera-status">Camera status: checking...</div>
+</div>
+<div class="section">
+<h2>Operation Mode</h2>
+<div class="button-group">
+<button id="auto-btn" class="secondary {% if mode=='AUTO' %}active{% endif %}"
+onclick="setMode('AUTO')">AUTO</button>
+<button id="manual-btn" class="secondary {% if mode=='MANUAL' %}active{% endif %}"
+onclick="setMode('MANUAL')">MANUAL</button>
+</div>
+<h2>Manual Controls</h2>
+<div class="controls">
+<div></div>
+<button class="primary center-col" onclick="sendCommand('start')">
+▲
+FORWARD</button>
+<div></div>
+<button class="warning" onclick="sendCommand('left')">
+◀
+LEFT</button>
+<button class="danger" onclick="sendCommand('stop')">■ STOP</button>
+<button class="warning" onclick="sendCommand('right')">RIGHT
+▶
+</button>
+</div>
+<h2>System Control</h2>
+<div class="button-group">
+<button id="emergency-btn" class="danger" onclick="toggleEmergency()">
+{% if emergency %}RESET EMERGENCY{% else %}EMERGENCY STOP{% endif %}
+</button>
+{% if pause_requested %}
+<button id="approve-btn" class="primary" onclick="approveResume()">APPROVE
+RESUME</button>
+{% endif %}
+</div>
+</div>
+</div>
+<script>
+function setMode(newMode) {
+fetch('/set_mode', {
+method: 'POST',
+headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+body: mode=${newMode}
+}).then(() => {
+document.getElementById('auto-btn').classList.toggle('active', newMode === 'AUTO');
+document.getElementById('manual-btn').classList.toggle('active', newMode === 'MANUAL');
+});
+}
+function sendCommand(cmd) {
+fetch('/set_command', {
+method: 'POST',
+headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+body: command=${cmd}
+});
+}
+function toggleEmergency() {
+fetch('/emergency', {
+method: 'POST'
+}).then(() => {
+window.location.reload();
+});
+}
+function approveResume() {
+fetch('/approve_resume', {
+method: 'POST'
+}).then(() => {
+window.location.reload();
+});
+}
+// Check camera status periodically
+setInterval(() => {
+fetch('/camera_status')
+.then(response => response.json())
+.then(data => {
+let statusText = Camera status: ${data.status};
+if (data.last_update) {
+statusText += ` (last update: ${data.last_update}, ${data.seconds_ago}s ago)`;
+}
+document.getElementById('camera-status').innerText = statusText;
+});
+}, 2000);
+</script>
+</body>
+</html>
