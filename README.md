@@ -18,7 +18,7 @@ This is a hardware-based warehouse management robot built using an ESP32 microco
 
 <h2>Components Used</h2>
 <ul>
-  <li>3 × ESP Dev Boards(ESP32, ESP32 CAM, ESP8266)</li>
+  <li>2 × ESP Dev Boards(ESP32 CAM, ESP8266)</li>
   <li>TCS34725 Color Sensor(x1)</li>
   <li>L298N Motor Driver(x1)</li>
   <li>DC Motors(x2)</li>
