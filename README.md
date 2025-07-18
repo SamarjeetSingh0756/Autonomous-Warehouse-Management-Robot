@@ -119,4 +119,4 @@ Place your robot on a test track with distinct colored paths. Start your server 
 <hr>
 
 <h2>Credits</h2>
-<p>Developed by Samarjeet Singh as part of a final-year engineering project. Inspired by the potential of real-world smart warehouse automation using simple hardware.</p>
+<p>Developed by Samarjeet Singh and Vasu Jindal as part of a final-year engineering project. Inspired by the potential of real-world smart warehouse automation using simple hardware.</p>
